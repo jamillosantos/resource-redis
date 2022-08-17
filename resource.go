@@ -7,7 +7,7 @@ import (
 )
 
 type Resource struct {
-	*redis.ClusterClient
+	redis.UniversalClient
 
 	name   string
 	config *PlatformConfig
@@ -52,16 +52,16 @@ func (r *Resource) Start(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	client := redis.NewClusterClient(&clusterOpts)
+	client := redis.NewUniversalClient(&clusterOpts)
 	result := client.Ping(ctx)
 	if err := result.Err(); err != nil {
 		return err
 	}
-	r.ClusterClient = client
+	r.UniversalClient = client
 	return nil
 }
 
-func applyConfig(clusterOpts redis.ClusterOptions, config *PlatformConfig) error {
+func applyConfig(clusterOpts redis.UniversalOptions, config *PlatformConfig) error {
 	clusterOpts.Addrs = config.Addrs
 	clusterOpts.Username = config.Username
 	clusterOpts.Password = config.Password
@@ -98,8 +98,8 @@ func applyConfig(clusterOpts redis.ClusterOptions, config *PlatformConfig) error
 	return nil
 }
 
-func defaultClusterOpts() redis.ClusterOptions {
-	return redis.ClusterOptions{}
+func defaultClusterOpts() redis.UniversalOptions {
+	return redis.UniversalOptions{}
 }
 
 func (r *Resource) Stop(ctx context.Context) error {
