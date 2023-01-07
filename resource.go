@@ -48,7 +48,7 @@ func (r Resource) Name() string {
 
 func (r *Resource) Start(ctx context.Context) error {
 	clusterOpts := defaultClusterOpts()
-	err := applyConfig(clusterOpts, r.config)
+	err := applyConfig(&clusterOpts, r.config)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (r *Resource) Start(ctx context.Context) error {
 	return nil
 }
 
-func applyConfig(clusterOpts redis.UniversalOptions, config *PlatformConfig) error {
+func applyConfig(clusterOpts *redis.UniversalOptions, config *PlatformConfig) error {
 	clusterOpts.Addrs = config.Addrs
 	clusterOpts.Username = config.Username
 	clusterOpts.Password = config.Password
